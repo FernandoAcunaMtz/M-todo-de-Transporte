@@ -1,0 +1,150 @@
+<mxfile host="65bd71144e">
+    <diagram id="GGIp4mhYCT6-3vyaKTHd" name="Método de Transporte">
+        <mxGraphModel dx="2018" dy="2289" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Inicio" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#0ea5e9;fillColor=#e0f2fe;fontSize=14;fontColor=#0f172a;" vertex="1" parent="1">
+                    <mxGeometry x="690" y="-180" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Definir Nº de orígenes y destinos" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1d4ed8;fillColor=#e5edff;fontSize=13;fontColor=#0f172a;" vertex="1" parent="1">
+                    <mxGeometry x="670" y="-90" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Generar tablas de entrada&#xa;(matriz de costos, ofertas, demandas)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1d4ed8;fillColor=#eef2ff;fontSize=13;fontColor=#0f172a;" vertex="1" parent="1">
+                    <mxGeometry x="670" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Usuario ingresa costos, ofertas y demandas&#xa;o carga un problema de prueba" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#4b5563;fillColor=#f9fafb;fontSize=13;fontColor=#111827;" vertex="1" parent="1">
+                    <mxGeometry x="670" y="100" width="290" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Calcular oferta total y demanda total" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#4b5563;fillColor=#f3f4f6;fontSize=13;fontColor=#111827;" vertex="1" parent="1">
+                    <mxGeometry x="670" y="200" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="¿Oferta total = Demanda total?" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#b91c1c;fillColor=#fee2e2;fontSize=13;fontColor=#111827;" vertex="1" parent="1">
+                    <mxGeometry x="680" y="300" width="210" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Mostrar alerta:&#xa;“El problema no está balanceado”&#xa;Usuario ajusta datos" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#b91c1c;fillColor=#fef2f2;fontSize=12;fontColor=#7f1d1d;" vertex="1" parent="1">
+                    <mxGeometry x="1010" y="210" width="230" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Usuario selecciona método" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#111827;fillColor=#f3f4f6;fontSize=13;fontColor=#111827;" vertex="1" parent="1">
+                    <mxGeometry x="680" y="510" width="210" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="¿Qué método se elige?" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#4f46e5;fillColor=#e0f2fe;fontSize=13;fontColor=#111827;" vertex="1" parent="1">
+                    <mxGeometry x="1120" y="590" width="220" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Método Esquina Noroeste" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=26;rounded=1;strokeColor=#f97316;fillColor=#fff7ed;fontSize=13;fontColor=#7c2d12;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="800" width="1040" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Inicializar en celda (O1, D1)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#f97316;fillColor=#ffedd5;fontSize=12;fontColor=#7c2d12;" vertex="1" parent="11">
+                    <mxGeometry y="26" width="260" height="194" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Asignar min(oferta i, demanda j)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#f97316;fillColor=#ffedd5;fontSize=12;fontColor=#7c2d12;" vertex="1" parent="11">
+                    <mxGeometry x="260" y="26" width="260" height="194" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Actualizar oferta i y demanda j" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#f97316;fillColor=#ffedd5;fontSize=12;fontColor=#7c2d12;" vertex="1" parent="11">
+                    <mxGeometry x="520" y="26" width="260" height="194" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="Mover a la siguiente fila o columna&#xa;según quién se agotó" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#f97316;fillColor=#ffedd5;fontSize=12;fontColor=#7c2d12;" vertex="1" parent="11">
+                    <mxGeometry x="780" y="26" width="260" height="194" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="Método Costo Mínimo" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=26;rounded=1;strokeColor=#ec4899;fillColor=#fdf2f8;fontSize=13;fontColor=#831843;" vertex="1" parent="1">
+                    <mxGeometry x="640" y="1190" width="1040" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="Buscar la celda con menor costo&#xa;entre las aún disponibles" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#ec4899;fillColor=#fce7f3;fontSize=12;fontColor=#831843;" vertex="1" parent="16">
+                    <mxGeometry y="26" width="260" height="214" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="Asignar min(oferta i, demanda j)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#ec4899;fillColor=#fce7f3;fontSize=12;fontColor=#831843;" vertex="1" parent="16">
+                    <mxGeometry x="260" y="26" width="260" height="214" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="Actualizar oferta i y demanda j" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#ec4899;fillColor=#fce7f3;fontSize=12;fontColor=#831843;" vertex="1" parent="16">
+                    <mxGeometry x="520" y="26" width="260" height="214" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="Marcar fila/columna agotada como no disponible" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#ec4899;fillColor=#fce7f3;fontSize=12;fontColor=#831843;" vertex="1" parent="16">
+                    <mxGeometry x="780" y="26" width="260" height="214" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="Método VAM (Vogel)" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=26;rounded=1;strokeColor=#8b5cf6;fillColor=#f5f3ff;fontSize=13;fontColor=#4c1d95;" vertex="1" parent="1">
+                    <mxGeometry x="1430" y="750" width="1120" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="Calcular penalización por fila&#xa;(2 costos más pequeños)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#8b5cf6;fillColor=#ede9fe;fontSize=12;fontColor=#4c1d95;" vertex="1" parent="21">
+                    <mxGeometry y="26" width="280" height="254" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="Calcular penalización por columna" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#8b5cf6;fillColor=#ede9fe;fontSize=12;fontColor=#4c1d95;" vertex="1" parent="21">
+                    <mxGeometry x="280" y="26" width="280" height="254" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Elegir la fila o columna&#xa;con mayor penalización" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#8b5cf6;fillColor=#ede9fe;fontSize=12;fontColor=#4c1d95;" vertex="1" parent="21">
+                    <mxGeometry x="560" y="26" width="280" height="254" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="Dentro de ella, elegir la celda&#xa;de menor costo y asignar&#xa;min(oferta i, demanda j)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#8b5cf6;fillColor=#ede9fe;fontSize=12;fontColor=#4c1d95;" vertex="1" parent="21">
+                    <mxGeometry x="840" y="26" width="280" height="254" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="Mostrar matrices de asignación,&#xa;matriz de costos con asignaciones&#xa;y costo total del método elegido" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#16a34a;fillColor=#dcfce7;fontSize=13;fontColor=#14532d;" vertex="1" parent="1">
+                    <mxGeometry x="1030" y="1580" width="280" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="(Opcional) Ejecutar los 3 métodos&#xa;y comparar costos totales&#xa;→ identificar mejor solución" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#0891b2;fillColor=#cffafe;fontSize=13;fontColor=#0f172a;" vertex="1" parent="1">
+                    <mxGeometry x="1020" y="1780" width="280" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="Fin" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#0ea5e9;fillColor=#e0f2fe;fontSize=14;fontColor=#0f172a;" vertex="1" parent="1">
+                    <mxGeometry x="1110" y="1990" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" style="endArrow=block;strokeColor=#0f172a;" edge="1" parent="1" source="2" target="3">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" style="endArrow=block;strokeColor=#0f172a;" edge="1" parent="1" source="3" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" style="endArrow=block;strokeColor=#0f172a;" edge="1" parent="1" source="4" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" style="endArrow=block;strokeColor=#0f172a;" edge="1" parent="1" source="5" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" style="endArrow=block;strokeColor=#0f172a;" edge="1" parent="1" source="6" target="7">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="No" style="endArrow=block;strokeColor=#b91c1c;fontSize=11;labelBackgroundColor=#fee2e2;" edge="1" parent="1" source="7" target="8">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="930" y="345" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" style="endArrow=block;strokeColor=#b91c1c;dashed=1;" edge="1" parent="1" source="8" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="Sí" style="endArrow=block;strokeColor=#16a34a;fontSize=11;labelBackgroundColor=#dcfce7;" edge="1" parent="1" source="7" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" style="endArrow=block;strokeColor=#0f172a;" edge="1" parent="1" source="9" target="10">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="Esquina Noroeste" style="endArrow=block;strokeColor=#f97316;fontSize=11;" edge="1" parent="1" source="10" target="11">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="170" y="780" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="39" value="Costo Mínimo" style="endArrow=block;strokeColor=#ec4899;fontSize=11;" edge="1" parent="1" source="10" target="16">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="460" y="780" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="40" value="VAM" style="endArrow=block;strokeColor=#8b5cf6;fontSize=11;" edge="1" parent="1" source="10" target="21">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="770" y="780" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="41" style="endArrow=block;strokeColor=#16a34a;dashed=1;" edge="1" parent="1" source="11" target="26">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" style="endArrow=block;strokeColor=#16a34a;dashed=1;" edge="1" parent="1" source="16" target="26">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" style="endArrow=block;strokeColor=#16a34a;dashed=1;" edge="1" parent="1" source="21" target="26">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" style="endArrow=block;strokeColor=#0f172a;" edge="1" parent="1" source="26" target="27">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" style="endArrow=block;strokeColor=#0f172a;" edge="1" parent="1" source="27" target="28">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
