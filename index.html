@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método de Transporte - Solver</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: radial-gradient(circle at top, #022c22 0%, #02130d 55%, #000000 100%); min-height: 100vh;">
+    
+    <!-- Contenedor Principal -->
+    <div style="width: 100%; padding: 0 0 3rem 0;">
+        
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, rgba(4,47,46,0.96), rgba(5,150,105,0.96)); backdrop-filter: blur(18px); padding: 2.5rem 1.5rem 2.25rem 1.5rem; text-align: center; box-shadow: 0 18px 45px rgba(2,20,16,0.85); border-bottom: 1px solid rgba(16,185,129,0.6); border-radius: 0 0 32px 32px;">
+            <h1 style="margin: 0; color: #ecfdf5; font-size: 2.4rem; letter-spacing: 0.04em; text-shadow: 0 10px 30px rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; gap: 0.6rem;">
+                <img src="https://img.icons8.com/fluency/40/delivery.png" alt="Transporte" style="height: 34px; width: 34px;">
+                <span>Método de Transporte</span>
+            </h1>
+            <p style="margin: 0.9rem 0 0 0; color: #bbf7d0; font-size: 1.05rem; opacity: 0.9;">
+                Optimización Logística - Esquina Noroeste, Costo Mínimo y VAM
+            </p>
+        </div>
+
+        <!-- Objetivos del Proyecto -->
+        <div style="max-width: 1400px; margin: 3rem auto 2.5rem auto; padding: 0 1.25rem;">
+            <div style="background: radial-gradient(circle at top left, rgba(16,185,129,0.22), rgba(2,44,34,0.96)); backdrop-filter: blur(22px); border-radius: 26px; padding: 2.5rem 2.25rem; margin-bottom: 2.5rem; box-shadow: 0 22px 55px rgba(1,17,12,0.9); color: #ecfdf5; border: 1px solid rgba(52,211,153,0.55);">
+                <h2 style="margin: 0 0 1.25rem 0; color: #ecfdf5; font-size: 1.9rem; border-bottom: 1px solid rgba(45,212,191,0.6); padding-bottom: 0.75rem; display: flex; align-items: center; gap: 0.6rem;">
+                    <img src="https://img.icons8.com/fluency/32/goal.png" alt="Objetivo" style="height: 26px; width: 26px;">
+                    <span>Pregunta a Resolver</span>
+                </h2>
+                <p style="margin: 0; font-size: 1.1rem; line-height: 1.8; color: #d1fae5;">
+                    <strong>¿Cuál es la ruta óptima de envíos entre los centros de oferta y los puntos de demanda que minimiza el costo total de transporte, cumpliendo con las capacidades de suministro y los requerimientos de cada destino?</strong>
+                </p>
+                
+                <div style="margin-top: 1.75rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+                    <div style="background: rgba(4,47,46,0.75); padding: 1.5rem 1.4rem; border-radius: 18px; backdrop-filter: blur(18px); border: 1px solid rgba(52,211,153,0.6);">
+                        <h3 style="margin: 0 0 0.6rem 0; color: #bbf7d0; font-size: 1.15rem; display: flex; align-items: center; gap: 0.45rem;">
+                            <img src="https://img.icons8.com/fluency/24/combo-chart.png" alt="Objetivo general" style="height: 22px; width: 22px;">
+                            <span>Objetivo General</span>
+                        </h3>
+                        <p style="margin: 0; font-size: 0.98rem; line-height: 1.7; color: #ecfdf5;">
+                            Desarrollar un programa capaz de aplicar el método de transporte para determinar la distribución óptima de productos desde varios puntos de oferta hacia diversos puntos de demanda, minimizando el costo total de transporte.
+                        </p>
+                    </div>
+                    
+                    <div style="background: rgba(4,47,46,0.75); padding: 1.5rem 1.4rem; border-radius: 18px; backdrop-filter: blur(18px); border: 1px solid rgba(52,211,153,0.6);">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #a7f3d0; font-size: 1.15rem; display: flex; align-items: center; gap: 0.45rem;">
+                            <img src="https://img.icons8.com/fluency/24/task.png" alt="Objetivos particulares" style="height: 22px; width: 22px;">
+                            <span>Objetivos Particulares</span>
+                        </h3>
+                        <ul style="margin: 0.75rem 0 0 0; padding-left: 1.3rem; font-size: 0.98rem; line-height: 1.7; color: #ecfdf5;">
+                            <li>Diseñar estructura de datos para ofertas, demandas y costos</li>
+                            <li>Implementar algoritmos: Esquina Noroeste, Costo Mínimo y VAM</li>
+                            <li>Generar soluciones iniciales factibles y comparables</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenedor de contenido -->
+        <div style="max-width: 1400px; margin: 0 auto 3rem auto; padding: 0 1.5rem;">
+            
+            <!-- Panel de Control -->
+            <div style="background: rgba(2,44,34,0.94); backdrop-filter: blur(20px); border-radius: 24px; padding: 2.5rem 2.25rem; margin-bottom: 2.75rem; box-shadow: 0 20px 45px rgba(1,17,12,0.8); border: 1px solid rgba(52,211,153,0.6);">
+                <h2 style="margin: 0 0 1.75rem 0; color: #ecfdf5; border-bottom: 1px solid rgba(45,212,191,0.7); padding-bottom: 0.75rem; font-size: 1.6rem;">
+                    Configuración del Problema
+                </h2>
+                
+                <!-- Problemas de Prueba -->
+                <div style="margin-bottom: 2.25rem; padding: 1.75rem; background: radial-gradient(circle at top left, #064e3b, #022c22); border-radius: 18px; border-left: 4px solid #16a34a; box-shadow: 0 14px 30px rgba(4,120,87,0.45);">
+                    <h3 style="margin: 0 0 1.1rem 0; color: #ecfdf5; font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <img src="https://img.icons8.com/fluency/26/test-passed.png" alt="Problemas de prueba" style="height: 22px; width: 22px;">
+                        <span>Problemas de Prueba</span>
+                    </h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1.1rem;">
+                        <button onclick="cargarProblema1()" style="flex: 1; min-width: 200px; padding: 1rem 1.25rem; background: linear-gradient(135deg, rgba(22,163,74,0.9), rgba(5,150,105,0.95)); color: #ecfdf5; border: 1px solid rgba(52,211,153,0.8); border-radius: 999px; cursor: pointer; font-size: 0.98rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.25); transition: all 0.26s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; backdrop-filter: blur(18px);">
+                            <img src="https://img.icons8.com/fluency/24/ingredients-list.png" alt="Problema 1" style="height: 22px; width: 22px;">
+                            <span>Problema 1 (3x4)</span>
+                        </button>
+                        <button onclick="cargarProblema2()" style="flex: 1; min-width: 200px; padding: 1rem 1.25rem; background: linear-gradient(135deg, rgba(21,128,61,0.95), rgba(4,120,87,0.95)); color: #ecfdf5; border: 1px solid rgba(52,211,153,0.8); border-radius: 999px; cursor: pointer; font-size: 0.98rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.25); transition: all 0.26s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; backdrop-filter: blur(18px);">
+                            <img src="https://img.icons8.com/fluency/24/warehouse.png" alt="Problema 2" style="height: 22px; width: 22px;">
+                            <span>Problema 2 (4x3)</span>
+                        </button>
+                        <button onclick="cargarProblema3()" style="flex: 1; min-width: 200px; padding: 1rem 1.25rem; background: linear-gradient(135deg, rgba(6,95,70,0.98), rgba(4,120,87,0.98)); color: #ecfdf5; border: 1px solid rgba(52,211,153,0.8); border-radius: 999px; cursor: pointer; font-size: 0.98rem; font-weight: 600; box-shadow: 0 10px 30px rgba(255,255,255,0.25); transition: all 0.26s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; backdrop-filter: blur(18px);">
+                            <img src="https://img.icons8.com/fluency/24/factory.png" alt="Problema 3" style="height: 22px; width: 22px;">
+                            <span>Problema 3 (3x3)</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Descripción del Problema -->
+                    <div id="descripcionProblema" style="display: none; margin-top: 2rem;"></div>
+                </div>
+
+                <!-- Dimensiones -->
+                <div style="display: flex; gap: 2.5rem; margin-bottom: 1.75rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: #bbf7d0; font-weight: bold;">
+                            Número de Orígenes:
+                        </label>
+                        <input type="number" id="numOrigenes" value="3" min="1" max="10" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid rgba(52,211,153,0.6); border-radius: 12px; font-size: 0.98rem; box-sizing: border-box; background: rgba(15,118,110,0.18); color: #ecfdf5; box-shadow: 0 8px 18px rgba(255,255,255,0.12);">
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: #bbf7d0; font-weight: bold;">
+                            Número de Destinos:
+                        </label>
+                        <input type="number" id="numDestinos" value="4" min="1" max="10" style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid rgba(52,211,153,0.6); border-radius: 12px; font-size: 0.98rem; box-sizing: border-box; background: rgba(15,118,110,0.18); color: #ecfdf5; box-shadow: 0 8px 18px rgba(255,255,255,0.12);">
+                    </div>
+                </div>
+
+                <button onclick="generarTablas()" style="width: 100%; padding: 1.1rem 1.25rem; background: linear-gradient(135deg, #059669, #047857); color: #ecfdf5; border: 1px solid rgba(52,211,153,0.9); border-radius: 999px; cursor: pointer; font-size: 1.05rem; font-weight: 600; letter-spacing: 0.02em; box-shadow: 0 16px 36px rgba(255,255,255,0.28); transition: all 0.26s; margin-bottom: 2.25rem; backdrop-filter: blur(18px);">
+                    Generar Tablas de Entrada
+                </button>
+
+                <!-- Tablas de Entrada -->
+                <div id="tablasEntrada"></div>
+
+                <!-- Botones de Solución -->
+                <div id="botonesResolucion" style="display: none; margin-top: 3rem;">
+                    <div id="botonesResolucionInner" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(20px); border-radius: 20px; padding: 2rem 2.25rem; border: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12); display: grid; grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); gap: 2rem; align-items: stretch; width: 100%; box-sizing: border-box;">
+                        
+                        <!-- Columna izquierda: Métodos -->
+                        <div style="display: flex; flex-direction: column; gap: 1.1rem;">
+                            <div style="margin-bottom: 0.75rem;">
+                                <h3 style="margin: 0 0 0.4rem 0; color: #0f172a; font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                                    <img src="https://img.icons8.com/fluency/26/rocket.png" alt="Métodos de solución" style="height: 22px; width: 22px;">
+                                    <span>Métodos de Solución</span>
+                                </h3>
+                                <p style="margin: 0; color: #64748b; font-size: 0.92rem;">Elige un método para obtener una solución inicial del problema de transporte.</p>
+                            </div>
+
+                            <!-- Esquina Noroeste -->
+                            <button onclick="resolverEsquinaNoroeste()" style="width: 100%; padding: 1.1rem 1.3rem; background: linear-gradient(135deg, #047857, #065f46); color: #ecfdf5; border: 1px solid rgba(52,211,153,0.85); border-radius: 16px; cursor: pointer; font-size: 0.98rem; font-weight: 600; box-shadow: 0 10px 26px rgba(255,255,255,0.26); transition: all 0.3s; text-align: left; backdrop-filter: blur(16px);">
+                                <div style="display: flex; align-items: center; gap: 0.9rem;">
+                                    <img src="https://img.icons8.com/fluency/28/compass.png" alt="Esquina Noroeste" style="height: 26px; width: 26px;">
+                                    <div>
+                                        <div style="font-size: 1rem; font-weight: 700;">Esquina Noroeste</div>
+                                        <div style="font-size: 0.83rem; opacity: 0.9; font-weight: 400;">Método simple y sistemático</div>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <!-- Costo Mínimo -->
+                            <button onclick="resolverCostoMinimo()" style="width: 100%; padding: 1.1rem 1.3rem; background: linear-gradient(135deg, #059669, #10b981); color: #ecfdf5; border: 1px solid rgba(74,222,128,0.9); border-radius: 16px; cursor: pointer; font-size: 0.98rem; font-weight: 600; box-shadow: 0 10px 26px rgba(255,255,255,0.26); transition: all 0.3s; text-align: left; backdrop-filter: blur(16px);">
+                                <div style="display: flex; align-items: center; gap: 0.9rem;">
+                                    <img src="https://img.icons8.com/fluency/28/low-price.png" alt="Costo mínimo" style="height: 26px; width: 26px;">
+                                    <div>
+                                        <div style="font-size: 1rem; font-weight: 700;">Costo Mínimo</div>
+                                        <div style="font-size: 0.83rem; opacity: 0.9; font-weight: 400;">Selecciona siempre el menor costo disponible</div>
+                                    </div>
+                                </div>
+                            </button>
+
+                            <!-- VAM -->
+                            <button onclick="resolverVAM()" style="width: 100%; padding: 1.1rem 1.3rem; background: linear-gradient(135deg, #16a34a, #22c55e); color: #ecfdf5; border: 1px solid rgba(74,222,128,0.9); border-radius: 16px; cursor: pointer; font-size: 0.98rem; font-weight: 600; box-shadow: 0 10px 26px rgba(255,255,255,0.26); transition: all 0.3s; text-align: left; backdrop-filter: blur(16px);">
+                                <div style="display: flex; align-items: center; gap: 0.9rem;">
+                                    <img src="https://img.icons8.com/fluency/28/dice.png" alt="VAM" style="height: 26px; width: 26px;">
+                                    <div>
+                                        <div style="font-size: 1rem; font-weight: 700;">VAM (Vogel)</div>
+                                        <div style="font-size: 0.83rem; opacity: 0.9; font-weight: 400;">Usa penalizaciones para una mejor solución</div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Columna derecha: Comparación -->
+                        <div style="display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+                            <button onclick="compararMetodos()" style="width: 100%; padding: 1.4rem 1.6rem; background: linear-gradient(135deg, #16a34a, #15803d); color: #ecfdf5; border: 1px solid rgba(52,211,153,0.9); border-radius: 18px; cursor: pointer; font-size: 1.05rem; font-weight: 700; box-shadow: 0 12px 32px rgba(255,255,255,0.26); transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.75rem; min-height: 120px; backdrop-filter: blur(18px);">
+                                <img src="https://img.icons8.com/fluency/28/combo-chart.png" alt="Comparar métodos" style="height: 26px; width: 26px;">
+                                <span>Comparar los 3 Métodos</span>
+                            </button>
+                            <p style="margin: 0; color: #64748b; font-size: 0.9rem; text-align: center; line-height: 1.6;">
+                                Ejecuta <strong>Esquina Noroeste</strong>, <strong>Costo Mínimo</strong> y <strong>VAM</strong> al mismo tiempo para ver qué método ofrece el menor costo total.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            <div id="resultados"></div>
+
+            <!-- Botón para ver diagrama del método de transporte -->
+            <div style="margin-top: 2.5rem; display: flex; justify-content: center;">
+                <button onclick="verDiagramaTransporte()" style="padding: 1rem 1.8rem; background: linear-gradient(135deg, rgba(16,185,129,0.95), rgba(22,163,74,0.98)); color: #ecfdf5; border: 1px solid rgba(52,211,153,0.9); border-radius: 999px; cursor: pointer; font-size: 0.98rem; font-weight: 600; letter-spacing: 0.02em; box-shadow: 0 14px 32px rgba(255,255,255,0.4); backdrop-filter: blur(18px); display: inline-flex; align-items: center; gap: 0.6rem;">
+                    <img src="https://img.icons8.com/fluency/24/zoom-in.png" alt="Ver diagrama" style="height: 20px; width: 20px;">
+                    <span>Ver diagrama del Método de Transporte</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let costos = [];
+        let ofertas = [];
+        let demandas = [];
+        let numOrigenes = 0;
+        let numDestinos = 0;
+
+        // Función para generar las tablas de entrada
+        function generarTablas() {
+            numOrigenes = parseInt(document.getElementById('numOrigenes').value);
+            numDestinos = parseInt(document.getElementById('numDestinos').value);
+            
+            // Ocultar descripción si se genera tabla manualmente
+            document.getElementById('descripcionProblema').style.display = 'none';
+
+            let html = `
+                <div style="margin-top: 2rem;">
+                    <h3 style="color: #ffffff; margin-bottom: 1rem;">Matriz de Costos</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #064e3b, #022c22);">
+                                    <th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Origen/Destino</th>
+            `;
+
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">D${j + 1}</th>`;
+            }
+            html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2; background: rgba(76, 175, 80, 0.3);">Oferta</th></tr></thead><tbody>`;
+
+            for (let i = 0; i < numOrigenes; i++) {
+                html += `<tr style="background: ${i % 2 === 0 ? '#f5f5f5' : 'white'};">
+                    <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">O${i + 1}</td>`;
+                
+                for (let j = 0; j < numDestinos; j++) {
+                    html += `<td style="padding: 0.5rem; border: 1px solid #ddd;">
+                        <input type="number" id="costo_${i}_${j}" value="0" min="0" style="width: 100%; padding: 0.5rem; border: 2px solid #e0e0e0; border-radius: 5px; text-align: center; font-size: 1rem;">
+                    </td>`;
+                }
+
+                html += `<td style="padding: 0.5rem; border: 1px solid #ddd; background: rgba(76, 175, 80, 0.1);">
+                    <input type="number" id="oferta_${i}" value="0" min="0" style="width: 100%; padding: 0.5rem; border: 2px solid #4caf50; border-radius: 5px; text-align: center; font-weight: bold; font-size: 1rem;">
+                </td></tr>`;
+            }
+
+            html += `<tr style="background: rgba(33, 150, 243, 0.1);">
+                <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">Demanda</td>`;
+            
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<td style="padding: 0.5rem; border: 1px solid #ddd;">
+                    <input type="number" id="demanda_${j}" value="0" min="0" style="width: 100%; padding: 0.5rem; border: 2px solid #2196f3; border-radius: 5px; text-align: center; font-weight: bold; font-size: 1rem;">
+                </td>`;
+            }
+
+            html += `<td style="border: 1px solid #ddd;"></td></tr></tbody></table></div></div>`;
+
+            document.getElementById('tablasEntrada').innerHTML = html;
+            document.getElementById('botonesResolucion').style.display = 'flex';
+        }
+
+        // Abrir diagrama del método de transporte en una nueva pestaña
+        // Asegúrate de guardar la imagen exportada (PNG/JPG) junto a este archivo
+        // con el nombre 'metodo_transporte.png' o ajusta la ruta abajo.
+        function verDiagramaTransporte() {
+            window.open('metodo_transporte.png', '_blank');
+        }
+
+        // Función para cargar datos de entrada
+        function cargarDatos() {
+            costos = [];
+            ofertas = [];
+            demandas = [];
+
+            for (let i = 0; i < numOrigenes; i++) {
+                costos[i] = [];
+                for (let j = 0; j < numDestinos; j++) {
+                    costos[i][j] = parseFloat(document.getElementById(`costo_${i}_${j}`).value);
+                }
+                ofertas[i] = parseFloat(document.getElementById(`oferta_${i}`).value);
+            }
+
+            for (let j = 0; j < numDestinos; j++) {
+                demandas[j] = parseFloat(document.getElementById(`demanda_${j}`).value);
+            }
+        }
+
+        // Problema de prueba 1
+        function cargarProblema1() {
+            document.getElementById('numOrigenes').value = 3;
+            document.getElementById('numDestinos').value = 4;
+            generarTablas();
+
+            const costosP1 = [
+                [2, 3, 11, 7],
+                [1, 0, 6, 1],
+                [5, 8, 15, 9]
+            ];
+            const ofertasP1 = [6, 1, 10];
+            const demandasP1 = [7, 5, 3, 2];
+
+            setTimeout(() => {
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 4; j++) {
+                        document.getElementById(`costo_${i}_${j}`).value = costosP1[i][j];
+                    }
+                    document.getElementById(`oferta_${i}`).value = ofertasP1[i];
+                }
+                for (let j = 0; j < 4; j++) {
+                    document.getElementById(`demanda_${j}`).value = demandasP1[j];
+                }
+            }, 100);
+
+            // Mostrar descripción del problema
+            const descripcion = document.getElementById('descripcionProblema');
+            descripcion.style.display = 'block';
+            descripcion.innerHTML = `
+                <div style="background: rgba(37, 99, 235, 0.08); backdrop-filter: blur(10px); padding: 2rem; border-radius: 18px; border-left: 4px solid #2563eb; box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);">
+                    <h4 style="margin: 0 0 1rem 0; color: #ffffff; font-size: 1.25rem; font-weight: 600;">
+                        Problema 1: Pequeña Empresa y Clientes Locales
+                    </h4>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.7); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem;">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #ffffff; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/shop.png" alt="Contexto real" style="height: 18px; width: 18px;">
+                            <span>Contexto Real</span>
+                        </h5>
+                        <p style="margin: 0; color: #334155; line-height: 1.7; font-size: 0.98rem;">
+                            Imagina una <strong>pequeña empresa panificadora</strong> con 3 panaderías (O1, O2, O3) que deben entregar producto diariamente a 4 tiendas (D1, D2, D3, D4).
+                        </p>
+                        <ul style="margin: 0.8rem 0 0 1.5rem; color: #475569; line-height: 1.7; font-size: 0.95rem;">
+                            <li>Cada panadería tiene una <strong>capacidad diaria</strong> (su oferta): <strong>6, 1 y 10 unidades</strong></li>
+                            <li>Cada tienda tiene una <strong>demanda fija</strong> (lo que necesita vender): <strong>7, 5, 3 y 2 unidades</strong></li>
+                            <li>La matriz de costos representa el <strong>costo de enviar 1 unidad</strong> desde cada panadería a cada tienda (gasolina, tiempo de reparto, peajes, etc.)</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.7); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem;">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #ffffff; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/goal.png" alt="Qué responde el modelo" style="height: 18px; width: 18px;">
+                            <span>Qué responde el modelo</span>
+                        </h5>
+                        <ul style="margin: 0; color: #334155; line-height: 1.7; font-size: 0.95rem; padding-left: 1.5rem;">
+                            <li>¿Cuántas unidades debe enviar cada panadería a cada tienda para <strong>cubrir toda la demanda</strong> sin pasar la capacidad de cada panadería?</li>
+                            <li>¿Cómo hacerlo de forma que el <strong>costo total de transporte sea mínimo</strong>?</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(59, 130, 246, 0.12)); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(37, 99, 235, 0.2);">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #ffffff; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/idea.png" alt="Por qué es útil" style="height: 18px; width: 18px;">
+                            <span>Por qué es útil</span>
+                        </h5>
+                        <p style="margin: 0; color: #ffffff; line-height: 1.7; font-size: 0.95rem;">
+                            Este tipo de problema se parece a decidir <strong>rutas de reparto urbano</strong> para una empresa pequeña, donde el número de puntos no es grande, pero el costo de gasolina/tiempo sí importa. 
+                            Te ayuda a entender bien <strong>cómo se leen las ofertas, demandas, la matriz de costos</strong> y cómo los métodos (Esquina Noroeste, Costo Mínimo, VAM) van llenando la matriz con asignaciones.
+                            En palabras sencillas, aprendes a <strong>repartir bien lo que tienes</strong> para que a cada tienda le llegue lo que necesita gastando lo menos posible.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Problema de prueba 2
+        function cargarProblema2() {
+            document.getElementById('numOrigenes').value = 4;
+            document.getElementById('numDestinos').value = 3;
+            generarTablas();
+
+            const costosP2 = [
+                [12, 13, 4],
+                [6, 9, 10],
+                [10, 12, 5],
+                [9, 11, 7]
+            ];
+            const ofertasP2 = [55, 45, 30, 50];
+            const demandasP2 = [40, 60, 80];
+
+            setTimeout(() => {
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        document.getElementById(`costo_${i}_${j}`).value = costosP2[i][j];
+                    }
+                    document.getElementById(`oferta_${i}`).value = ofertasP2[i];
+                }
+                for (let j = 0; j < 3; j++) {
+                    document.getElementById(`demanda_${j}`).value = demandasP2[j];
+                }
+            }, 100);
+
+            // Mostrar descripción del problema
+            const descripcion = document.getElementById('descripcionProblema');
+            descripcion.style.display = 'block';
+            descripcion.innerHTML = `
+                <div style="background: rgba(22, 163, 74, 0.08); backdrop-filter: blur(10px); padding: 2rem; border-radius: 18px; border-left: 4px solid #16a34a; box-shadow: 0 8px 24px rgba(22, 163, 74, 0.12);">
+                    <h4 style="margin: 0 0 1rem 0; color: #ffffff; font-size: 1.25rem; font-weight: 600;">
+                        Problema 2: Almacenes Regionales y Grandes Clientes
+                    </h4>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.7); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem;">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #1e3c72; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/warehouse.png" alt="Contexto real" style="height: 18px; width: 18px;">
+                            <span>Contexto Real</span>
+                        </h5>
+                        <p style="margin: 0; color: #334155; line-height: 1.7; font-size: 0.98rem;">
+                            Piensa en una empresa de <strong>distribución de bebidas</strong> con 4 almacenes regionales (O1–O4) que surten a 3 grandes supermercados (D1–D3):
+                        </p>
+                        <ul style="margin: 0.8rem 0 0 1.5rem; color: #475569; line-height: 1.7; font-size: 0.95rem;">
+                            <li>Cada almacén tiene un <strong>stock disponible para la semana</strong>: <strong>55, 45, 30 y 50 unidades</strong></li>
+                            <li>Los supermercados tienen una <strong>demanda semanal</strong>: <strong>40, 60 y 80 unidades</strong></li>
+                            <li>Los costos de la matriz reflejan el <strong>costo de transporte por tráiler</strong> por unidad (distancia, peajes, consumo de combustible, etc.)</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.7); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem;">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #1e3c72; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/goal.png" alt="Qué responde el modelo" style="height: 18px; width: 18px;">
+                            <span>Qué responde el modelo</span>
+                        </h5>
+                        <ul style="margin: 0; color: #334155; line-height: 1.7; font-size: 0.95rem; padding-left: 1.5rem;">
+                            <li>¿Desde qué almacén le conviene surtir a cada supermercado y <strong>cuánto</strong> enviar desde cada uno?</li>
+                            <li>¿Cómo combinar los 4 almacenes para cubrir las 3 demandas al <strong>costo total mínimo</strong>?</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.18), rgba(34, 197, 94, 0.18)); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(22, 163, 74, 0.5);">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #ffffff; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/idea.png" alt="Por qué es útil" style="height: 18px; width: 18px;">
+                            <span>Por qué es útil</span>
+                        </h5>
+                        <p style="margin: 0 0 0.8rem 0; color: #ffffff; line-height: 1.7; font-size: 0.95rem;">
+                            Este tipo de caso es más cercano a una <strong>red logística regional</strong>, donde hay varios almacenes que pueden atender a los mismos clientes grandes.
+                        </p>
+                        <ul style="margin: 0; color: #ffffff; line-height: 1.7; font-size: 0.95rem; padding-left: 1.5rem;">
+                            <li>Sirve para ver cómo el modelo decide <strong>repartir la demanda de un mismo cliente</strong> entre varios orígenes si es más barato</li>
+                            <li>Es ideal para practicar cómo un cambio pequeño en un costo puede <strong>mover asignaciones completas</strong> de un almacén a otro</li>
+                        </ul>
+                        <p style="margin: 0.8rem 0 0 0; color: #ffffff; line-height: 1.7; font-size: 0.95rem;">
+                            Dicho de forma sencilla, este problema te enseña a <strong>decidir desde qué bodega enviar a cada súper</strong> para no gastar de más, usando bien los camiones y el inventario disponible.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Problema de prueba 3
+        function cargarProblema3() {
+            document.getElementById('numOrigenes').value = 3;
+            document.getElementById('numDestinos').value = 3;
+            generarTablas();
+
+            const costosP3 = [
+                [8, 6, 10],
+                [9, 12, 13],
+                [14, 9, 16]
+            ];
+            const ofertasP3 = [150, 175, 275];
+            const demandasP3 = [200, 100, 300];
+
+            setTimeout(() => {
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        document.getElementById(`costo_${i}_${j}`).value = costosP3[i][j];
+                    }
+                    document.getElementById(`oferta_${i}`).value = ofertasP3[i];
+                }
+                for (let j = 0; j < 3; j++) {
+                    document.getElementById(`demanda_${j}`).value = demandasP3[j];
+                }
+            }, 100);
+
+            // Mostrar descripción del problema
+            const descripcion = document.getElementById('descripcionProblema');
+            descripcion.style.display = 'block';
+            descripcion.innerHTML = `
+                <div style="background: rgba(249, 115, 22, 0.08); backdrop-filter: blur(10px); padding: 2rem; border-radius: 18px; border-left: 4px solid #f97316; box-shadow: 0 8px 24px rgba(249, 115, 22, 0.12);">
+                    <h4 style="margin: 0 0 1rem 0; color: #ffffff; font-size: 1.25rem; font-weight: 600;">
+                        Problema 3: Fábricas y Centros de Distribución
+                    </h4>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.7); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem;">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #1e3c72; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/factory.png" alt="Contexto real" style="height: 18px; width: 18px;">
+                            <span>Contexto Real</span>
+                        </h5>
+                        <p style="margin: 0; color: #334155; line-height: 1.7; font-size: 0.98rem;">
+                            Imagina una empresa manufacturera con <strong>3 fábricas</strong> (O1, O2, O3) que producen un mismo producto y lo envían a <strong>3 centros de distribución</strong> (D1, D2, D3) que después abastecen a muchas tiendas:
+                        </p>
+                        <ul style="margin: 0.8rem 0 0 1.5rem; color: #475569; line-height: 1.7; font-size: 0.95rem;">
+                            <li>Las fábricas tienen <strong>capacidades de producción mensuales</strong>: <strong>150, 175 y 275 unidades</strong></li>
+                            <li>Los centros de distribución requieren <strong>volúmenes fijos</strong>: <strong>200, 100 y 300 unidades</strong></li>
+                            <li>La matriz de costos indica el <strong>costo de transportar una unidad</strong> desde cada fábrica a cada centro (puede depender de la distancia entre plantas y hubs logísticos)</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.7); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.2rem;">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #1e3c72; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/goal.png" alt="Qué responde el modelo" style="height: 18px; width: 18px;">
+                            <span>Qué responde el modelo</span>
+                        </h5>
+                        <ul style="margin: 0; color: #ffffff; line-height: 1.7; font-size: 0.95rem; padding-left: 1.5rem;">
+                            <li>¿Cómo distribuir la producción de cada fábrica entre los diferentes centros de distribución para <strong>satisfacer todo el mercado</strong>?</li>
+                            <li>¿Cuál es la combinación de envíos que logra el <strong>costo logístico mínimo</strong> para la empresa?</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.18), rgba(251, 146, 60, 0.18)); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(249, 115, 22, 0.5);">
+                        <h5 style="margin: 0 0 0.8rem 0; color: #ffffff; font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">
+                            <img src="https://img.icons8.com/fluency/20/idea.png" alt="Por qué es útil" style="height: 18px; width: 18px;">
+                            <span>Por qué es útil</span>
+                        </h5>
+                        <ul style="margin: 0; color: #ffffff; line-height: 1.7; font-size: 0.95rem; padding-left: 1.5rem;">
+                            <li>Representa un caso típico de <strong>planificación táctica</strong> en una cadena de suministro (no solo reparto urbano sino movimiento entre nodos "grandes")</li>
+                            <li>Ayuda a entender cómo el método de transporte apoya decisiones como <strong>qué planta debe producir para qué centro de distribución</strong>, y cómo cambios en costos (por ejemplo cambio de proveedor de transporte) pueden modificar toda la estrategia</li>
+                        </ul>
+                        <p style="margin: 0.8rem 0 0 0; color: #ffffff; line-height: 1.7; font-size: 0.95rem;">
+                            En resumen, este problema te muestra cómo <strong>organizar la producción de varias fábricas</strong> para abastecer bien a los centros de distribución sin desperdiciar dinero en traslados innecesarios.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Método de la Esquina Noroeste
+        function resolverEsquinaNoroeste() {
+            cargarDatos();
+            
+            // Verificar balance
+            const totalOferta = ofertas.reduce((a, b) => a + b, 0);
+            const totalDemanda = demandas.reduce((a, b) => a + b, 0);
+
+            if (Math.abs(totalOferta - totalDemanda) > 0.001) {
+                alert(`⚠️ El problema no está balanceado.\nOferta total: ${totalOferta}\nDemanda total: ${totalDemanda}\n\nPor favor, ajusta los valores.`);
+                return;
+            }
+
+            let asignaciones = Array(numOrigenes).fill(null).map(() => Array(numDestinos).fill(0));
+            let ofertasTemp = [...ofertas];
+            let demandasTemp = [...demandas];
+            let pasos = [];
+            let costoTotal = 0;
+
+            let i = 0, j = 0;
+
+            // Algoritmo de Esquina Noroeste
+            while (i < numOrigenes && j < numDestinos) {
+                let cantidad = Math.min(ofertasTemp[i], demandasTemp[j]);
+                asignaciones[i][j] = cantidad;
+                let costo = costos[i][j];
+                ofertasTemp[i] -= cantidad;
+                demandasTemp[j] -= cantidad;
+                costoTotal += cantidad * costo;
+
+                pasos.push({
+                    paso: pasos.length + 1,
+                    origen: i + 1,
+                    destino: j + 1,
+                    cantidad: cantidad,
+                    costo: costo,
+                    subtotal: cantidad * costo,
+                    posicion: `Celda (${i + 1}, ${j + 1})`
+                });
+
+                // Mover a la siguiente celda
+                if (ofertasTemp[i] === 0) {
+                    i++;
+                } else if (demandasTemp[j] === 0) {
+                    j++;
+                }
+            }
+
+            mostrarResultadosEsquinaNoroeste('Método de la Esquina Noroeste', asignaciones, pasos, costoTotal);
+        }
+
+        // Método del Costo Mínimo
+        function resolverCostoMinimo() {
+            cargarDatos();
+            
+            // Verificar balance
+            const totalOferta = ofertas.reduce((a, b) => a + b, 0);
+            const totalDemanda = demandas.reduce((a, b) => a + b, 0);
+
+            if (Math.abs(totalOferta - totalDemanda) > 0.001) {
+                alert(`⚠️ El problema no está balanceado.\nOferta total: ${totalOferta}\nDemanda total: ${totalDemanda}\n\nPor favor, ajusta los valores.`);
+                return;
+            }
+
+            let asignaciones = Array(numOrigenes).fill(null).map(() => Array(numDestinos).fill(0));
+            let ofertasTemp = [...ofertas];
+            let demandasTemp = [...demandas];
+            let pasos = [];
+            let costoTotal = 0;
+
+            // Crear copia de costos para marcar las celdas usadas
+            let costosDisponibles = costos.map(row => row.slice());
+
+            while (ofertasTemp.some(o => o > 0) && demandasTemp.some(d => d > 0)) {
+                // Encontrar el costo mínimo disponible
+                let minCosto = Infinity;
+                let minI = -1, minJ = -1;
+
+                for (let i = 0; i < numOrigenes; i++) {
+                    for (let j = 0; j < numDestinos; j++) {
+                        if (ofertasTemp[i] > 0 && demandasTemp[j] > 0 && costosDisponibles[i][j] < minCosto) {
+                            minCosto = costosDisponibles[i][j];
+                            minI = i;
+                            minJ = j;
+                        }
+                    }
+                }
+
+                if (minI === -1) break;
+
+                // Realizar asignación
+                let cantidad = Math.min(ofertasTemp[minI], demandasTemp[minJ]);
+                asignaciones[minI][minJ] = cantidad;
+                ofertasTemp[minI] -= cantidad;
+                demandasTemp[minJ] -= cantidad;
+                costoTotal += cantidad * minCosto;
+
+                pasos.push({
+                    paso: pasos.length + 1,
+                    origen: minI + 1,
+                    destino: minJ + 1,
+                    cantidad: cantidad,
+                    costo: minCosto,
+                    subtotal: cantidad * minCosto
+                });
+
+                // Marcar como no disponible si se agotó oferta o demanda
+                if (ofertasTemp[minI] === 0) {
+                    for (let j = 0; j < numDestinos; j++) {
+                        costosDisponibles[minI][j] = Infinity;
+                    }
+                }
+                if (demandasTemp[minJ] === 0) {
+                    for (let i = 0; i < numOrigenes; i++) {
+                        costosDisponibles[i][minJ] = Infinity;
+                    }
+                }
+            }
+
+            mostrarResultados('Método del Costo Mínimo', asignaciones, pasos, costoTotal);
+        }
+
+        // Método VAM (Vogel's Approximation Method)
+        function resolverVAM() {
+            cargarDatos();
+            
+            // Verificar balance
+            const totalOferta = ofertas.reduce((a, b) => a + b, 0);
+            const totalDemanda = demandas.reduce((a, b) => a + b, 0);
+
+            if (Math.abs(totalOferta - totalDemanda) > 0.001) {
+                alert(`⚠️ El problema no está balanceado.\nOferta total: ${totalOferta}\nDemanda total: ${totalDemanda}\n\nPor favor, ajusta los valores.`);
+                return;
+            }
+
+            let asignaciones = Array(numOrigenes).fill(null).map(() => Array(numDestinos).fill(0));
+            let ofertasTemp = [...ofertas];
+            let demandasTemp = [...demandas];
+            let pasos = [];
+            let costoTotal = 0;
+
+            // Crear copia de costos para marcar las celdas usadas
+            let costosDisponibles = costos.map(row => row.slice());
+            let filasActivas = Array(numOrigenes).fill(true);
+            let columnasActivas = Array(numDestinos).fill(true);
+
+            while (ofertasTemp.some(o => o > 0) && demandasTemp.some(d => d > 0)) {
+                // Calcular penalizaciones para filas
+                let penalizacionesFilas = [];
+                for (let i = 0; i < numOrigenes; i++) {
+                    if (!filasActivas[i] || ofertasTemp[i] === 0) {
+                        penalizacionesFilas[i] = -1;
+                        continue;
+                    }
+
+                    let costosValidos = [];
+                    for (let j = 0; j < numDestinos; j++) {
+                        if (columnasActivas[j] && demandasTemp[j] > 0) {
+                            costosValidos.push(costosDisponibles[i][j]);
+                        }
+                    }
+
+                    if (costosValidos.length >= 2) {
+                        costosValidos.sort((a, b) => a - b);
+                        penalizacionesFilas[i] = costosValidos[1] - costosValidos[0];
+                    } else if (costosValidos.length === 1) {
+                        penalizacionesFilas[i] = costosValidos[0];
+                    } else {
+                        penalizacionesFilas[i] = -1;
+                    }
+                }
+
+                // Calcular penalizaciones para columnas
+                let penalizacionesColumnas = [];
+                for (let j = 0; j < numDestinos; j++) {
+                    if (!columnasActivas[j] || demandasTemp[j] === 0) {
+                        penalizacionesColumnas[j] = -1;
+                        continue;
+                    }
+
+                    let costosValidos = [];
+                    for (let i = 0; i < numOrigenes; i++) {
+                        if (filasActivas[i] && ofertasTemp[i] > 0) {
+                            costosValidos.push(costosDisponibles[i][j]);
+                        }
+                    }
+
+                    if (costosValidos.length >= 2) {
+                        costosValidos.sort((a, b) => a - b);
+                        penalizacionesColumnas[j] = costosValidos[1] - costosValidos[0];
+                    } else if (costosValidos.length === 1) {
+                        penalizacionesColumnas[j] = costosValidos[0];
+                    } else {
+                        penalizacionesColumnas[j] = -1;
+                    }
+                }
+
+                // Encontrar la máxima penalización
+                let maxPenalizacionFila = Math.max(...penalizacionesFilas);
+                let maxPenalizacionColumna = Math.max(...penalizacionesColumnas);
+
+                let seleccionI = -1, seleccionJ = -1;
+
+                if (maxPenalizacionFila >= maxPenalizacionColumna) {
+                    // Seleccionar de fila
+                    let indiceFila = penalizacionesFilas.indexOf(maxPenalizacionFila);
+                    let minCosto = Infinity;
+                    
+                    for (let j = 0; j < numDestinos; j++) {
+                        if (columnasActivas[j] && demandasTemp[j] > 0 && costosDisponibles[indiceFila][j] < minCosto) {
+                            minCosto = costosDisponibles[indiceFila][j];
+                            seleccionJ = j;
+                        }
+                    }
+                    seleccionI = indiceFila;
+                } else {
+                    // Seleccionar de columna
+                    let indiceColumna = penalizacionesColumnas.indexOf(maxPenalizacionColumna);
+                    let minCosto = Infinity;
+                    
+                    for (let i = 0; i < numOrigenes; i++) {
+                        if (filasActivas[i] && ofertasTemp[i] > 0 && costosDisponibles[i][indiceColumna] < minCosto) {
+                            minCosto = costosDisponibles[i][indiceColumna];
+                            seleccionI = i;
+                        }
+                    }
+                    seleccionJ = indiceColumna;
+                }
+
+                if (seleccionI === -1 || seleccionJ === -1) break;
+
+                // Realizar asignación
+                let cantidad = Math.min(ofertasTemp[seleccionI], demandasTemp[seleccionJ]);
+                asignaciones[seleccionI][seleccionJ] = cantidad;
+                let costo = costosDisponibles[seleccionI][seleccionJ];
+                ofertasTemp[seleccionI] -= cantidad;
+                demandasTemp[seleccionJ] -= cantidad;
+                costoTotal += cantidad * costo;
+
+                pasos.push({
+                    paso: pasos.length + 1,
+                    origen: seleccionI + 1,
+                    destino: seleccionJ + 1,
+                    cantidad: cantidad,
+                    costo: costo,
+                    subtotal: cantidad * costo,
+                    penalizacionFilas: [...penalizacionesFilas],
+                    penalizacionColumnas: [...penalizacionesColumnas]
+                });
+
+                // Actualizar filas y columnas activas
+                if (ofertasTemp[seleccionI] === 0) {
+                    filasActivas[seleccionI] = false;
+                }
+                if (demandasTemp[seleccionJ] === 0) {
+                    columnasActivas[seleccionJ] = false;
+                }
+            }
+
+            mostrarResultadosVAM('Método VAM (Vogel)', asignaciones, pasos, costoTotal);
+        }
+
+        // Función para mostrar resultados del método de Costo Mínimo
+        function mostrarResultados(titulo, asignaciones, pasos, costoTotal) {
+            let html = `
+                <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <h2 style="margin: 0 0 1.5rem 0; color: #022c22; border-bottom: 3px solid #16a34a; padding-bottom: 0.5rem;">
+                        ${titulo}
+                    </h2>
+
+                    <!-- Pasos de Solución -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #1e3c72; margin-bottom: 1rem;">Pasos de Solución</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #047857, #065f46);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #d81b60;">Paso</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #d81b60;">Ruta</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #d81b60;">Cantidad</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #d81b60;">Costo Unitario</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #d81b60;">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+            `;
+
+            pasos.forEach((paso, idx) => {
+                html += `
+                    <tr style="background: ${idx % 2 === 0 ? '#f5f5f5' : 'white'};">
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${paso.paso}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">O${paso.origen} → D${paso.destino}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold; color: #2196f3;">${paso.cantidad}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">$${paso.costo}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold; color: #4caf50;">$${paso.subtotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Matriz de Asignaciones -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #ffffff; margin-bottom: 1rem;">Matriz de Asignaciones</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #064e3b, #022c22);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Origen/Destino</th>
+            `;
+
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">D${j + 1}</th>`;
+            }
+            html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Oferta</th></tr></thead><tbody>`;
+
+            for (let i = 0; i < numOrigenes; i++) {
+                html += `<tr style="background: ${i % 2 === 0 ? '#f5f5f5' : 'white'};">
+                    <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">O${i + 1}</td>`;
+                
+                for (let j = 0; j < numDestinos; j++) {
+                    const valor = asignaciones[i][j];
+                    const estilo = valor > 0 
+                        ? 'background: linear-gradient(135deg, #4caf50, #66bb6a); color: white; font-weight: bold;' 
+                        : 'background: white; color: #999;';
+                    html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; ${estilo}">${valor > 0 ? valor : '-'}</td>`;
+                }
+
+                html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${ofertas[i]}</td></tr>`;
+            }
+
+            html += `<tr style="background: rgba(33, 150, 243, 0.1);">
+                <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">Demanda</td>`;
+            
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${demandas[j]}</td>`;
+            }
+
+            html += `<td style="border: 1px solid #ddd;"></td></tr></tbody></table></div></div>`;
+
+            // Matriz de Costos con Asignaciones
+            html += `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #ffffff; margin-bottom: 1rem;">Matriz de Costos con Asignaciones</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #064e3b, #022c22);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Origen/Destino</th>
+            `;
+
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">D${j + 1}</th>`;
+            }
+            html += `</tr></thead><tbody>`;
+
+            for (let i = 0; i < numOrigenes; i++) {
+                html += `<tr style="background: ${i % 2 === 0 ? '#f5f5f5' : 'white'};">
+                    <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">O${i + 1}</td>`;
+                
+                for (let j = 0; j < numDestinos; j++) {
+                    const costo = costos[i][j];
+                    const asignacion = asignaciones[i][j];
+                    const estilo = asignacion > 0 
+                        ? 'background: linear-gradient(135deg, #4caf50, #66bb6a); color: white; font-weight: bold;' 
+                        : '';
+                    
+                    if (asignacion > 0) {
+                        html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; ${estilo}">
+                            <div style="font-size: 0.9rem;">Costo: $${costo}</div>
+                            <div style="font-size: 1.1rem; margin-top: 0.2rem;">✓ ${asignacion} unidades</div>
+                        </td>`;
+                    } else {
+                        html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; color: #666;">$${costo}</td>`;
+                    }
+                }
+
+                html += `</tr>`;
+            }
+
+            html += `</tbody></table></div></div>`;
+
+            // Costo Total
+            html += `
+                    <div style="background: linear-gradient(135deg, #4caf50, #66bb6a); padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);">
+                        <h3 style="margin: 0 0 0.5rem 0; color: white; font-size: 1.5rem;">Costo Total de Transporte</h3>
+                        <p style="margin: 0; color: white; font-size: 2.5rem; font-weight: bold;">$${costoTotal.toFixed(2)}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resultados').innerHTML = html;
+            document.getElementById('resultados').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Función para mostrar resultados del método VAM
+        function mostrarResultadosVAM(titulo, asignaciones, pasos, costoTotal) {
+            let html = `
+                <div style="background: rgba(2,44,34,0.96); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 8px 32px rgba(1,17,12,0.8);">
+                    <h2 style="margin: 0 0 1.5rem 0; color: #ecfdf5; border-bottom: 3px solid #16a34a; padding-bottom: 0.5rem;">
+                        ${titulo}
+                    </h2>
+
+                    <!-- Pasos de Solución con Penalizaciones -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #ecfdf5; margin-bottom: 1rem;">Pasos de Solución con Penalizaciones</h3>
+                        <div style="overflow-x: auto;">
+            `;
+
+            pasos.forEach((paso, idx) => {
+                html += `
+                    <div style="background: ${idx % 2 === 0 ? 'rgba(15,118,110,0.12)' : 'rgba(6,95,70,0.18)'}; padding: 1.5rem; margin-bottom: 1rem; border-radius: 8px; border-left: 5px solid #16a34a;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                            <h4 style="margin: 0; color: #a7f3d0;">Paso ${paso.paso}</h4>
+                            <div style="background: linear-gradient(135deg, #16a34a, #22c55e); color: white; padding: 0.5rem 1rem; border-radius: 5px; font-weight: bold;">
+                                O${paso.origen} → D${paso.destino}: ${paso.cantidad} unidades × $${paso.costo} = $${paso.subtotal.toFixed(2)}
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 250px;">
+                                <strong style="color: #ecfdf5;">Penalizaciones de Filas:</strong>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                `;
+
+                paso.penalizacionFilas.forEach((pen, i) => {
+                    if (pen >= 0) {
+                        html += `<span style="background: #e3f2fd; padding: 0.3rem 0.6rem; border-radius: 5px; font-size: 0.9rem;">O${i + 1}: ${pen.toFixed(1)}</span>`;
+                    }
+                });
+
+                html += `
+                                </div>
+                            </div>
+                            <div style="flex: 1; min-width: 250px;">
+                                <strong style="color: #ecfdf5;">Penalizaciones de Columnas:</strong>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                `;
+
+                paso.penalizacionColumnas.forEach((pen, j) => {
+                    if (pen >= 0) {
+                        html += `<span style="background: #f3e5f5; padding: 0.3rem 0.6rem; border-radius: 5px; font-size: 0.9rem;">D${j + 1}: ${pen.toFixed(1)}</span>`;
+                    }
+                });
+
+                html += `
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                        </div>
+                    </div>
+
+                    <!-- Resumen de Asignaciones -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #ecfdf5; margin-bottom: 1rem;">Resumen de Asignaciones</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #047857, #10b981);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #8e24aa;">Paso</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #8e24aa;">Ruta</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #8e24aa;">Cantidad</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #8e24aa;">Costo Unitario</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #8e24aa;">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+            `;
+
+            pasos.forEach((paso, idx) => {
+                html += `
+                    <tr style="background: ${idx % 2 === 0 ? '#f5f5f5' : 'white'};">
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${paso.paso}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">O${paso.origen} → D${paso.destino}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold; color: #2196f3;">${paso.cantidad}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">$${paso.costo}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold; color: #4caf50;">$${paso.subtotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Matriz de Asignaciones -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #ffffff; margin-bottom: 1rem;">Matriz de Asignaciones</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #064e3b, #022c22);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Origen/Destino</th>
+            `;
+
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">D${j + 1}</th>`;
+            }
+            html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Oferta</th></tr></thead><tbody>`;
+
+            for (let i = 0; i < numOrigenes; i++) {
+                html += `<tr style="background: ${i % 2 === 0 ? '#f5f5f5' : 'white'};">
+                    <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">O${i + 1}</td>`;
+                
+                for (let j = 0; j < numDestinos; j++) {
+                    const valor = asignaciones[i][j];
+                    const estilo = valor > 0 
+                        ? 'background: linear-gradient(135deg, #9c27b0, #ba68c8); color: white; font-weight: bold;' 
+                        : 'background: white; color: #999;';
+                    html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; ${estilo}">${valor > 0 ? valor : '-'}</td>`;
+                }
+
+                html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${ofertas[i]}</td></tr>`;
+            }
+
+            html += `<tr style="background: rgba(33, 150, 243, 0.1);">
+                <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">Demanda</td>`;
+            
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${demandas[j]}</td>`;
+            }
+
+            html += `<td style="border: 1px solid #ddd;"></td></tr></tbody></table></div></div>`;
+
+            // Matriz de Costos con Asignaciones
+            html += `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #ffffff; margin-bottom: 1rem;">Matriz de Costos con Asignaciones</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #064e3b, #022c22);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Origen/Destino</th>
+            `;
+
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">D${j + 1}</th>`;
+            }
+            html += `</tr></thead><tbody>`;
+
+            for (let i = 0; i < numOrigenes; i++) {
+                html += `<tr style="background: ${i % 2 === 0 ? '#f5f5f5' : 'white'};">
+                    <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">O${i + 1}</td>`;
+                
+                for (let j = 0; j < numDestinos; j++) {
+                    const costo = costos[i][j];
+                    const asignacion = asignaciones[i][j];
+                    const estilo = asignacion > 0 
+                        ? 'background: linear-gradient(135deg, #9c27b0, #ba68c8); color: white; font-weight: bold;' 
+                        : '';
+                    
+                    if (asignacion > 0) {
+                        html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; ${estilo}">
+                            <div style="font-size: 0.9rem;">Costo: $${costo}</div>
+                            <div style="font-size: 1.1rem; margin-top: 0.2rem;">✓ ${asignacion} unidades</div>
+                        </td>`;
+                    } else {
+                        html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; color: #666;">$${costo}</td>`;
+                    }
+                }
+
+                html += `</tr>`;
+            }
+
+            html += `</tbody></table></div></div>`;
+
+            // Costo Total
+            html += `
+                    <div style="background: linear-gradient(135deg, #065f46, #16a34a); padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 4px 20px rgba(209,250,229,0.45);">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #ecfdf5; font-size: 1.5rem;">💵 Costo Total de Transporte</h3>
+                        <p style="margin: 0; color: #ecfdf5; font-size: 2.5rem; font-weight: bold;">$${costoTotal.toFixed(2)}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resultados').innerHTML = html;
+            document.getElementById('resultados').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Función para mostrar resultados del método de Esquina Noroeste
+        function mostrarResultadosEsquinaNoroeste(titulo, asignaciones, pasos, costoTotal) {
+            let html = `
+                <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <h2 style="margin: 0 0 1.5rem 0; color: #1e3c72; border-bottom: 3px solid #ff9800; padding-bottom: 0.5rem;">
+                        ${titulo}
+                    </h2>
+
+                    <!-- Descripción del Método -->
+                    <div style="background: linear-gradient(135deg, #fff3e0, #ffe0b2); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border-left: 5px solid #ff9800;">
+                        <h3 style="margin: 0 0 0.5rem 0; color: #e65100;">Descripción del Método</h3>
+                        <p style="margin: 0; color: #424242; line-height: 1.6;">
+                            El método de la <strong>Esquina Noroeste</strong> es el más simple. Inicia en la celda superior izquierda (O1, D1) y 
+                            realiza asignaciones progresivamente hacia la derecha y hacia abajo, sin considerar los costos. 
+                            Es rápido pero no garantiza la solución óptima.
+                        </p>
+                    </div>
+
+                    <!-- Pasos de Solución -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #1e3c72; margin-bottom: 1rem;">Pasos de Solución</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #ff9800, #f57c00);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #fb8c00;">Paso</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #fb8c00;">Posición</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #fb8c00;">Ruta</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #fb8c00;">Cantidad</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #fb8c00;">Costo Unitario</th>
+                                        <th style="padding: 1rem; color: white; border: 1px solid #fb8c00;">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+            `;
+
+            pasos.forEach((paso, idx) => {
+                html += `
+                    <tr style="background: ${idx % 2 === 0 ? '#f5f5f5' : 'white'};">
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${paso.paso}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; color: #ff6f00;">${paso.posicion}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">O${paso.origen} → D${paso.destino}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold; color: #2196f3;">${paso.cantidad}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd;">$${paso.costo}</td>
+                        <td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold; color: #4caf50;">$${paso.subtotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Matriz de Asignaciones -->
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #ffffff; margin-bottom: 1rem;">Matriz de Asignaciones</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #064e3b, #022c22);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Origen/Destino</th>
+            `;
+
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">D${j + 1}</th>`;
+            }
+            html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Oferta</th></tr></thead><tbody>`;
+
+            for (let i = 0; i < numOrigenes; i++) {
+                html += `<tr style="background: ${i % 2 === 0 ? '#f5f5f5' : 'white'};">
+                    <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">O${i + 1}</td>`;
+                
+                for (let j = 0; j < numDestinos; j++) {
+                    const valor = asignaciones[i][j];
+                    const estilo = valor > 0 
+                        ? 'background: linear-gradient(135deg, #ff9800, #ffa726); color: white; font-weight: bold;' 
+                        : 'background: white; color: #999;';
+                    html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; ${estilo}">${valor > 0 ? valor : '-'}</td>`;
+                }
+
+                html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${ofertas[i]}</td></tr>`;
+            }
+
+            html += `<tr style="background: rgba(33, 150, 243, 0.1);">
+                <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">Demanda</td>`;
+            
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; font-weight: bold;">${demandas[j]}</td>`;
+            }
+
+            html += `<td style="border: 1px solid #ddd;"></td></tr></tbody></table></div></div>`;
+
+            // Matriz de Costos con Asignaciones
+            html += `
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="color: #ffffff; margin-bottom: 1rem;">Matriz de Costos con Asignaciones</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #1e3c72, #2a5298);">
+                                        <th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">Origen/Destino</th>
+            `;
+
+            for (let j = 0; j < numDestinos; j++) {
+                html += `<th style="padding: 1rem; color: white; border: 1px solid #4a90e2;">D${j + 1}</th>`;
+            }
+            html += `</tr></thead><tbody>`;
+
+            for (let i = 0; i < numOrigenes; i++) {
+                html += `<tr style="background: ${i % 2 === 0 ? '#f5f5f5' : 'white'};">
+                    <td style="padding: 0.75rem; font-weight: bold; color: #1e3c72; border: 1px solid #ddd;">O${i + 1}</td>`;
+                
+                for (let j = 0; j < numDestinos; j++) {
+                    const costo = costos[i][j];
+                    const asignacion = asignaciones[i][j];
+                    const estilo = asignacion > 0 
+                        ? 'background: linear-gradient(135deg, #ff9800, #ffa726); color: white; font-weight: bold;' 
+                        : '';
+                    
+                    if (asignacion > 0) {
+                        html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; ${estilo}">
+                            <div style="font-size: 0.9rem;">Costo: $${costo}</div>
+                            <div style="font-size: 1.1rem; margin-top: 0.2rem;">✓ ${asignacion} unidades</div>
+                        </td>`;
+                    } else {
+                        html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; color: #666;">$${costo}</td>`;
+                    }
+                }
+
+                html += `</tr>`;
+            }
+
+            html += `</tbody></table></div></div>`;
+
+            // Costo Total
+            html += `
+                    <div style="background: linear-gradient(135deg, #ff9800, #ffa726); padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 4px 20px rgba(255, 152, 0, 0.4);">
+                        <h3 style="margin: 0 0 0.5rem 0; color: white; font-size: 1.5rem;">Costo Total de Transporte</h3>
+                        <p style="margin: 0; color: white; font-size: 2.5rem; font-weight: bold;">$${costoTotal.toFixed(2)}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resultados').innerHTML = html;
+            document.getElementById('resultados').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Función para comparar los tres métodos
+        function compararMetodos() {
+            cargarDatos();
+            
+            // Verificar balance
+            const totalOferta = ofertas.reduce((a, b) => a + b, 0);
+            const totalDemanda = demandas.reduce((a, b) => a + b, 0);
+
+            if (Math.abs(totalOferta - totalDemanda) > 0.001) {
+                alert(`⚠️ El problema no está balanceado.\nOferta total: ${totalOferta}\nDemanda total: ${totalDemanda}\n\nPor favor, ajusta los valores.`);
+                return;
+            }
+
+            // Resolver con cada método
+            let resultadoEN = resolverMetodoEN();
+            let resultadoCM = resolverMetodoCM();
+            let resultadoVAM = resolverMetodoVAM();
+
+            // Mostrar comparación
+            mostrarComparacion(resultadoEN, resultadoCM, resultadoVAM);
+        }
+
+        // Funciones auxiliares para comparación
+        function resolverMetodoEN() {
+            let asignaciones = Array(numOrigenes).fill(null).map(() => Array(numDestinos).fill(0));
+            let ofertasTemp = [...ofertas];
+            let demandasTemp = [...demandas];
+            let costoTotal = 0;
+            let i = 0, j = 0;
+
+            while (i < numOrigenes && j < numDestinos) {
+                let cantidad = Math.min(ofertasTemp[i], demandasTemp[j]);
+                asignaciones[i][j] = cantidad;
+                costoTotal += cantidad * costos[i][j];
+                ofertasTemp[i] -= cantidad;
+                demandasTemp[j] -= cantidad;
+
+                if (ofertasTemp[i] === 0) i++;
+                else if (demandasTemp[j] === 0) j++;
+            }
+
+            return { metodo: 'Esquina Noroeste', asignaciones, costoTotal };
+        }
+
+        function resolverMetodoCM() {
+            let asignaciones = Array(numOrigenes).fill(null).map(() => Array(numDestinos).fill(0));
+            let ofertasTemp = [...ofertas];
+            let demandasTemp = [...demandas];
+            let costoTotal = 0;
+            let costosDisponibles = costos.map(row => row.slice());
+
+            while (ofertasTemp.some(o => o > 0) && demandasTemp.some(d => d > 0)) {
+                let minCosto = Infinity;
+                let minI = -1, minJ = -1;
+
+                for (let i = 0; i < numOrigenes; i++) {
+                    for (let j = 0; j < numDestinos; j++) {
+                        if (ofertasTemp[i] > 0 && demandasTemp[j] > 0 && costosDisponibles[i][j] < minCosto) {
+                            minCosto = costosDisponibles[i][j];
+                            minI = i;
+                            minJ = j;
+                        }
+                    }
+                }
+
+                if (minI === -1) break;
+
+                let cantidad = Math.min(ofertasTemp[minI], demandasTemp[minJ]);
+                asignaciones[minI][minJ] = cantidad;
+                ofertasTemp[minI] -= cantidad;
+                demandasTemp[minJ] -= cantidad;
+                costoTotal += cantidad * minCosto;
+
+                if (ofertasTemp[minI] === 0) {
+                    for (let j = 0; j < numDestinos; j++) costosDisponibles[minI][j] = Infinity;
+                }
+                if (demandasTemp[minJ] === 0) {
+                    for (let i = 0; i < numOrigenes; i++) costosDisponibles[i][minJ] = Infinity;
+                }
+            }
+
+            return { metodo: 'Costo Mínimo', asignaciones, costoTotal };
+        }
+
+        function resolverMetodoVAM() {
+            let asignaciones = Array(numOrigenes).fill(null).map(() => Array(numDestinos).fill(0));
+            let ofertasTemp = [...ofertas];
+            let demandasTemp = [...demandas];
+            let costoTotal = 0;
+            let costosDisponibles = costos.map(row => row.slice());
+            let filasActivas = Array(numOrigenes).fill(true);
+            let columnasActivas = Array(numDestinos).fill(true);
+
+            while (ofertasTemp.some(o => o > 0) && demandasTemp.some(d => d > 0)) {
+                let penalizacionesFilas = [];
+                for (let i = 0; i < numOrigenes; i++) {
+                    if (!filasActivas[i] || ofertasTemp[i] === 0) {
+                        penalizacionesFilas[i] = -1;
+                        continue;
+                    }
+                    let costosValidos = [];
+                    for (let j = 0; j < numDestinos; j++) {
+                        if (columnasActivas[j] && demandasTemp[j] > 0) {
+                            costosValidos.push(costosDisponibles[i][j]);
+                        }
+                    }
+                    if (costosValidos.length >= 2) {
+                        costosValidos.sort((a, b) => a - b);
+                        penalizacionesFilas[i] = costosValidos[1] - costosValidos[0];
+                    } else if (costosValidos.length === 1) {
+                        penalizacionesFilas[i] = costosValidos[0];
+                    } else {
+                        penalizacionesFilas[i] = -1;
+                    }
+                }
+
+                let penalizacionesColumnas = [];
+                for (let j = 0; j < numDestinos; j++) {
+                    if (!columnasActivas[j] || demandasTemp[j] === 0) {
+                        penalizacionesColumnas[j] = -1;
+                        continue;
+                    }
+                    let costosValidos = [];
+                    for (let i = 0; i < numOrigenes; i++) {
+                        if (filasActivas[i] && ofertasTemp[i] > 0) {
+                            costosValidos.push(costosDisponibles[i][j]);
+                        }
+                    }
+                    if (costosValidos.length >= 2) {
+                        costosValidos.sort((a, b) => a - b);
+                        penalizacionesColumnas[j] = costosValidos[1] - costosValidos[0];
+                    } else if (costosValidos.length === 1) {
+                        penalizacionesColumnas[j] = costosValidos[0];
+                    } else {
+                        penalizacionesColumnas[j] = -1;
+                    }
+                }
+
+                let maxPenalizacionFila = Math.max(...penalizacionesFilas);
+                let maxPenalizacionColumna = Math.max(...penalizacionesColumnas);
+                let seleccionI = -1, seleccionJ = -1;
+
+                if (maxPenalizacionFila >= maxPenalizacionColumna) {
+                    let indiceFila = penalizacionesFilas.indexOf(maxPenalizacionFila);
+                    let minCosto = Infinity;
+                    for (let j = 0; j < numDestinos; j++) {
+                        if (columnasActivas[j] && demandasTemp[j] > 0 && costosDisponibles[indiceFila][j] < minCosto) {
+                            minCosto = costosDisponibles[indiceFila][j];
+                            seleccionJ = j;
+                        }
+                    }
+                    seleccionI = indiceFila;
+                } else {
+                    let indiceColumna = penalizacionesColumnas.indexOf(maxPenalizacionColumna);
+                    let minCosto = Infinity;
+                    for (let i = 0; i < numOrigenes; i++) {
+                        if (filasActivas[i] && ofertasTemp[i] > 0 && costosDisponibles[i][indiceColumna] < minCosto) {
+                            minCosto = costosDisponibles[i][indiceColumna];
+                            seleccionI = i;
+                        }
+                    }
+                    seleccionJ = indiceColumna;
+                }
+
+                if (seleccionI === -1 || seleccionJ === -1) break;
+
+                let cantidad = Math.min(ofertasTemp[seleccionI], demandasTemp[seleccionJ]);
+                asignaciones[seleccionI][seleccionJ] = cantidad;
+                ofertasTemp[seleccionI] -= cantidad;
+                demandasTemp[seleccionJ] -= cantidad;
+                costoTotal += cantidad * costosDisponibles[seleccionI][seleccionJ];
+
+                if (ofertasTemp[seleccionI] === 0) filasActivas[seleccionI] = false;
+                if (demandasTemp[seleccionJ] === 0) columnasActivas[seleccionJ] = false;
+            }
+
+            return { metodo: 'VAM (Vogel)', asignaciones, costoTotal };
+        }
+
+        // Función para mostrar la comparación
+        function mostrarComparacion(resultadoEN, resultadoCM, resultadoVAM) {
+            const resultados = [resultadoEN, resultadoCM, resultadoVAM];
+            resultados.sort((a, b) => a.costoTotal - b.costoTotal);
+
+            let html = `
+                <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <h2 style="margin: 0 0 1.5rem 0; color: #1e3c72; border-bottom: 3px solid #00bcd4; padding-bottom: 0.5rem;">
+                        Comparación de los Tres Métodos
+                    </h2>
+
+                    <!-- Resumen Comparativo -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            `;
+
+            const colores = ['#10b981', '#22c55e', '#16a34a'];
+            const iconos = ['', '', ''];
+            
+            [resultadoEN, resultadoCM, resultadoVAM].forEach((resultado, idx) => {
+                const esMejor = resultado.costoTotal === resultados[0].costoTotal;
+                const bordeExtra = esMejor ? `border: 3px solid ${colores[idx]}; transform: scale(1.02);` : '';
+                
+                html += `
+                    <div style="background: linear-gradient(135deg, ${colores[idx]}, ${colores[idx]}dd); padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); ${bordeExtra} transition: all 0.3s;">
+                        ${esMejor ? '<div style="background: #4caf50; color: white; padding: 0.3rem; border-radius: 5px; text-align: center; font-weight: bold; margin-bottom: 0.5rem;">MEJOR SOLUCIÓN</div>' : ''}
+                        <h3 style="margin: 0 0 1rem 0; color: white; font-size: 1.3rem;">${iconos[idx]} ${resultado.metodo}</h3>
+                        <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 8px; backdrop-filter: blur(5px);">
+                            <p style="margin: 0 0 0.5rem 0; color: white; font-size: 0.9rem;">Costo Total:</p>
+                            <p style="margin: 0; color: white; font-size: 2rem; font-weight: bold;">$${resultado.costoTotal.toFixed(2)}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+
+                    <!-- Análisis de Diferencias -->
+                    <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border-left: 5px solid #2196f3;">
+                        <h3 style="margin: 0 0 1rem 0; color: #0d47a1;">Análisis de Diferencias</h3>
+                        <div style="display: grid; gap: 0.8rem;">
+            `;
+
+            const costoMejor = resultados[0].costoTotal;
+            [resultadoEN, resultadoCM, resultadoVAM].forEach((resultado) => {
+                const diferencia = resultado.costoTotal - costoMejor;
+                const porcentaje = costoMejor > 0 ? ((diferencia / costoMejor) * 100).toFixed(2) : 0;
+                
+                html += `
+                    <div style="background: white; padding: 1rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color: #1e3c72;">${resultado.metodo}:</strong>
+                        <span style="color: ${diferencia === 0 ? '#4caf50' : '#f44336'}; font-weight: bold;">
+                            ${diferencia === 0 ? '✓ Óptimo' : `+$${diferencia.toFixed(2)} (+${porcentaje}%)`}
+                        </span>
+                    </div>
+                `;
+            });
+
+            html += `
+                        </div>
+                    </div>
+
+                    <!-- Matrices de cada método -->
+                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">Matrices de Asignación por Método</h3>
+            `;
+
+            [resultadoEN, resultadoCM, resultadoVAM].forEach((resultado, idx) => {
+                html += `
+                    <div style="margin-bottom: 2rem; background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <h4 style="margin: 0 0 1rem 0; color: ${colores[idx]};">${iconos[idx]} ${resultado.metodo} - $${resultado.costoTotal.toFixed(2)}</h4>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: ${colores[idx]};">
+                                        <th style="padding: 0.75rem; color: white; border: 1px solid #ddd;">O/D</th>
+                `;
+
+                for (let j = 0; j < numDestinos; j++) {
+                    html += `<th style="padding: 0.75rem; color: white; border: 1px solid #ddd;">D${j + 1}</th>`;
+                }
+                html += `</tr></thead><tbody>`;
+
+                for (let i = 0; i < numOrigenes; i++) {
+                    html += `<tr style="background: ${i % 2 === 0 ? '#f5f5f5' : 'white'};">
+                        <td style="padding: 0.75rem; font-weight: bold; border: 1px solid #ddd;">O${i + 1}</td>`;
+                    
+                    for (let j = 0; j < numDestinos; j++) {
+                        const valor = resultado.asignaciones[i][j];
+                        const costo = costos[i][j];
+                        const estilo = valor > 0 ? `background: ${colores[idx]}; color: white; font-weight: bold;` : '';
+                        
+                        if (valor > 0) {
+                            html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; ${estilo}">
+                                ${valor} <span style="font-size: 0.8rem;">(×$${costo})</span>
+                            </td>`;
+                        } else {
+                            html += `<td style="padding: 0.75rem; text-align: center; border: 1px solid #ddd; color: #999;">-</td>`;
+                        }
+                    }
+                    html += `</tr>`;
+                }
+
+                html += `</tbody></table></div></div>`;
+            });
+
+            // Conclusión
+            html += `
+                    <div style="background: linear-gradient(135deg, #4caf50, #66bb6a); padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);">
+                        <h3 style="margin: 0 0 0.5rem 0; color: white; font-size: 1.5rem;">Conclusión</h3>
+                        <p style="margin: 0.5rem 0 0 0; color: white; font-size: 1.2rem; line-height: 1.6;">
+                            El método <strong>${resultados[0].metodo}</strong> proporciona la mejor solución con un costo de <strong>$${resultados[0].costoTotal.toFixed(2)}</strong>
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resultados').innerHTML = html;
+            document.getElementById('resultados').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Efectos hover para botones
+        document.addEventListener('DOMContentLoaded', function() {
+            const style = document.createElement('style');
+            style.textContent = `
+                button {
+                    position: relative;
+                }
+                button:hover {
+                    transform: translateY(-3px) scale(1.02);
+                    box-shadow: 0 14px 36px rgba(255,255,255,0.55) !important;
+                }
+                button:active {
+                    transform: translateY(-1px) scale(1.01);
+                }
+                button::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                    border-radius: inherit;
+                }
+                button:hover::before {
+                    opacity: 1;
+                }
+                input:focus {
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+                    transform: scale(1.01);
+                    transition: all 0.2s;
+                }
+                @media (max-width: 768px) {
+                    #botonesResolucionInner {
+                        grid-template-columns: 1fr !important;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
